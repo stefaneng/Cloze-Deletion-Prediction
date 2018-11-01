@@ -1,10 +1,11 @@
 import pandas as pd
 from keras.preprocessing.text import Tokenizer
-from keras.callbacks import EarlyStopping, CSVLogger
+from keras.callbacks import EarlyStopping, CSVLogger, ModelCheckpoint
 from keras.preprocessing.sequence import pad_sequences
 from keras.utils import to_categorical
 import itertools
 import numpy as np
+import random
 
 from keras.models import Model
 from keras.layers import Dense, LSTM, Embedding, Input, Dropout, concatenate, Bidirectional
@@ -25,7 +26,7 @@ def create_training_example(sentence, pos_tags, sent_id, tokenizer, cloze_pos=['
             
             yield sent_id, seqs[0], seqs[1], seqs[2]
 
-atta_df = pd.read_csv('/scratch/gussteen/final_project/attasidor_sample.csv')
+atta_df = pd.read_csv('/scratch/gussteen/final_project/attasidor.csv')
 
 atta_df['word'] = atta_df['word'].astype(str)
 atta_all_sents = atta_df.groupby('sent_id')['word'].apply(lambda x: ' '.join(x))
@@ -84,6 +85,8 @@ def simple_lstm():
 
     csv_logger = CSVLogger('./results/atta_lstm_log.csv', append=True, separator=',')
     earlystopping = EarlyStopping(monitor='loss', patience=2)
+    filepath="/scratch/gussteen/final_project/checkpoint/atta_lstm.best.hdf5"
+    checkpoint = ModelCheckpoint(filepath, monitor='val_acc', verbose=1, save_best_only=True, mode='max')
 
     model.compile(optimizer='adam',
                     loss={
@@ -93,8 +96,8 @@ def simple_lstm():
 
     model.summary()
 
-    history = model.fit([X_before, X_after], y_cat, batch_size=32, epochs=40,
-                    callbacks=[csv_logger, earlystopping])
+    history = model.fit([X_before, X_after], y_cat, batch_size=64, epochs=30,
+                    callbacks=[csv_logger, earlystopping, checkpoint], validation_split=0.30, verbose=2)
     model.save('./models/atta_lstm.hdf5')
     return model
 
@@ -116,6 +119,8 @@ def simple_blstm():
 
     csv_logger = CSVLogger('./results/atta_blstm_log.csv', append=True, separator=',')
     earlystopping = EarlyStopping(monitor='loss', patience=2)
+    filepath="/scratch/gussteen/final_project/checkpoint/atta_blstm.best.hdf5"
+    checkpoint = ModelCheckpoint(filepath, monitor='val_acc', verbose=1, save_best_only=True, mode='max')
 
     model.compile(optimizer='adam',
                     loss={
@@ -125,9 +130,10 @@ def simple_blstm():
 
     model.summary()
 
-    history = model.fit([X_before, X_after], y_cat, batch_size=32, epochs=40,
-                    callbacks=[csv_logger, earlystopping])
+    history = model.fit([X_before, X_after], y_cat, batch_size=64, epochs=30,
+                    callbacks=[csv_logger, earlystopping, checkpoint], validation_split=0.30, verbose=2)
     model.save('./models/atta_blstm.hdf5')
     return model
 
+simple_lstm()
 simple_blstm()
