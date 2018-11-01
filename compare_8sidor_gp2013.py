@@ -6,9 +6,9 @@ from keras.utils import to_categorical
 import pandas as pd
 import numpy as np
 
-n = 100000
-atta_df = pd.read_csv('/scratch/gussteen/final_project/attasidor.csv').sample(n)
-gp_df = pd.read_csv('/scratch/gussteen/final_project/gp2013_sample.csv').sample(n)
+atta_df = pd.read_csv('/scratch/gussteen/final_project/attasidor.csv')
+gp_df = pd.read_csv('/scratch/gussteen/final_project/gp2013_sample.csv')
+
 
 # Add 8 Sidor sentences
 atta_df['word'] = atta_df['word'].astype(str)
@@ -40,6 +40,8 @@ for words, w_pos, s_id in zip(list(sentence_list), list(pos_list), list(sentence
         X_before.append(before)
         X_after.append(after)
         y.append(w)
+        
+max_x = len(X_ids)
 
 print("Created {} training examples for GP2013".format(len(y)))
         
@@ -48,9 +50,8 @@ X_before = np.array(X_before)
 X_after = np.array(X_after)
 y_cat = to_categorical(y, num_classes = max_words + 1)
 
-
 #### MODEL GP2013
-blstm_dropout(X_before, X_after, y_cat, max_words + 1, "8sidor_comp", epochs=10, dropout=0.2)
+blstm_dropout(X_before, X_after, y_cat, max_words + 1, "gp2013_comp", epochs=30, dropout=0.2)
 
 ### Analysis of 8 Sidor data
 sentence_list = atta_df.groupby('sent_id')['word'].apply(list)
@@ -68,12 +69,15 @@ for words, w_pos, s_id in zip(list(sentence_list), list(pos_list), list(sentence
         y.append(w)
 
 print("Created {} training examples".format(len(y)))
-        
-X_ids = np.array(X_ids)
-X_before = np.array(X_before)
-X_after = np.array(X_after)
+
+# Take the same number of examples as used in the GP2013 test
+sample = np.random.choice(len(y), size=max_x, replace=False)
+X_ids = np.array(X_ids)[sample]
+X_before = np.array(X_before)[sample]
+X_after = np.array(X_after)[sample]
+y = np.array(y)[sample]
 y_cat = to_categorical(y, num_classes = max_words + 1)
 
 
 #### MODEL 8 Sidor
-blstm_dropout(X_before, X_after, y_cat, max_words + 1, "gp2013_comp", epochs=10, dropout=0.2)
+blstm_dropout(X_before, X_after, y_cat, max_words + 1, "8sidor_comp", epochs=30, dropout=0.2)
