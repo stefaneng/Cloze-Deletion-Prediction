@@ -20,7 +20,7 @@ These type of flashcards are described in great detail in Gabriel Wyner's book, 
 The idea is to include a cloze deletion sentence, definition, a picture, other possibly relevant information (part of speech, conjugation, etc.).
 An example of these flash cards can be seen below.
 
-![Cloze example](./beamer/cloze_example.png | width=100)
+<img src="./beamer/cloze_example.png" width="400">
 
 After using this method of studying for some time, I have found that certain sentences work better than other for remembering new vocabulary and grammar.
 Long sentences tended to be difficult to remember and were not as useful as I would tend to only look at a few words around the missing word.
