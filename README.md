@@ -4,6 +4,41 @@ Cloze deletion prediction project for LT2316 H18 at Göteborg University
 
 Overleaf LaTeX project is available [here](https://www.overleaf.com/read/tmnqdngqrbws)
 
+## Introduction
+
+A cloze deletion test is a form of language test where a sentence (or paragraph) is given to the test taker with blanks for missing words [8].
+The student is expected to fill in a "correct" word in the blanks.
+
+Example from Wikipedia's article on cloze deletion [9]: 
+
+> Today, I went to the _______ and bought some milk and eggs.
+
+Some of the possible answers to fill in would be store, market, farm, etc.
+
+Cloze deletion tests can be useful for language learners. 
+These type of flashcards are described in great detail in Gabriel Wyner's book, Fluent Forever [12]
+The idea is to include a cloze deletion sentence, definition, a picture, other possibly relevant information (part of speech, conjugation, etc.).
+An example of these flash cards can be seen below.
+
+![Cloze example](./beamer/cloze_example.png)
+
+After using this method of studying for some time, I have found that certain sentences work better than other for remembering new vocabulary and grammar.
+Long sentences tended to be difficult to remember and were not as useful as I would tend to only look at a few words around the missing word.
+Cards that had a personal association were much easier to recall.
+Good definitions (simple and short but descriptive) helped as well.
+
+In this paper I explore various machine learning approaches to predicting cloze deletion sentences from two Swedish news sources (8 Sidor and Göteborgs-Posten from 2013).
+The goals for this paper were to answer the following questions:
+  - Can we predict missing word using only the words around it?
+  - What sentences are good example sentences?
+    - Does length of sentence make a difference?
+  - Where are good sources to find cloze deletion sentences?
+
+I compare the difference between an LSTM (Long-Short term memory) neural network with that of a Bidirectional LSTM.
+Later the two news sources are compared to see which data set is easier to predict.
+Then I explore tuning the dropout parameter to see how overfitting can be improved.
+Finally the predictions are analyzed.
+
 ## Data
 On the mltgpu server, all the data is found on `/scratch/gussteen/final_project/`
 
