@@ -1,6 +1,8 @@
 # Cloze-Deletion-Prediction
 
-Cloze deletion prediction project for LT2316 H18 at Göteborg University
+Cloze deletion prediction project for LT2316 H18 at Göteborg University.
+
+[Read the paper](./Cloze_Deletion_Paper.pdf)
 
 Overleaf LaTeX project is available [here](https://www.overleaf.com/read/tmnqdngqrbws)
 
